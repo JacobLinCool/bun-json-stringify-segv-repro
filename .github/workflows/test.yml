@@ -1,0 +1,31 @@
+name: Test
+
+on:
+    workflow_dispatch:
+
+jobs:
+    test:
+        strategy:
+            matrix:
+                os:
+                    - ubuntu-latest
+                    - macos-latest
+
+        name: "${{ matrix.os }}"
+        runs-on: ${{ matrix.os }}
+
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v3
+
+            - name: Setup Bun
+              uses: xhyrom/setup-bun@v0.1.3
+              with:
+                  bun-version: latest
+
+            - name: Run Working Source
+              run: bun working.js
+
+            - name: Run Crashing Source
+              run: bun crashing.js
+              continue-on-error: true
